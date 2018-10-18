@@ -3,7 +3,7 @@
 class retry{
  constructor() {}
  
- static attempt(maxRetryTimes, func, ...args) {
+ static async attempt(maxRetryTimes, func, ...args) {
   var retryTimes = 0;
   var resolved   = false;
   var running    = false;
@@ -22,7 +22,7 @@ class retry{
      
      console.log(`Retry time = ${retryTimes} , maxRetryTimes = ${maxRetryTimes}`);
      
-     await func(args).then(result ={
+     await func(...args).then(result ={
       running = false;
       resolved = true;
       ret = result;

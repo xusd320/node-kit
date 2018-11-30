@@ -1,9 +1,11 @@
 'use strict';
 
 class retry{
- constructor() {}
+ constructor(ctx) {
+   this.ctx = ctx;
+ }
  
- static async attempt(maxRetryTimes, func, ...args) {
+ async attempt(maxRetryTimes, func, ...args) {
   var retryTimes = 0;
   var resolved   = false;
   var running    = false;
@@ -17,16 +19,19 @@ class retry{
      if(retryTimes > maxRetryTimes) {
       console.log('Failed, maxRetryTimes reached !');
       resolved = true;
-      return ret;
+      throw new Error(ret);
      }
      
-     console.log(`Retry time = ${retryTimes} , maxRetryTimes = ${maxRetryTimes}`);
+     //console.log(`Retry time = ${retryTimes} , maxRetryTimes = ${maxRetryTimes}`);
      
-     await func(...args).then(result ={
+     let fun = this.ctx ? this.ctx[func] : func;
+
+     await fun(...args).then(result ={
       running = false;
       resolved = true;
       ret = result;
      }, err => {
+       ret = err;
        running = false;
        console.log('Failed, retry again !');
      });

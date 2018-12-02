@@ -22,11 +22,9 @@ class retry{
       throw new Error(ret);
      }
      
-     //console.log(`Retry time = ${retryTimes} , maxRetryTimes = ${maxRetryTimes}`);
-     
-     let fun = this.ctx ? this.ctx[func] : func;
+     let fun = this.ctx ? this.ctx[func].bind(this.ctx) : func;
 
-     await fun(...args).then(result ={
+     await fun(...args).then(result => {
       running = false;
       resolved = true;
       ret = result;

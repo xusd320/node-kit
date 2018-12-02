@@ -24,6 +24,7 @@ class retry{
      
      let fun = this.ctx ? this.ctx[func].bind(this.ctx) : func;
 
+     console.log(`try times ${retryTimes}, max ${maxRetryTimes}`);
      await fun(...args).then(result => {
       running = false;
       resolved = true;
@@ -31,7 +32,7 @@ class retry{
      }, err => {
        ret = err;
        running = false;
-       console.log('Failed, retry again !');
+       console.log(`Failed for reason :  ${err}, try again !`);
      });
     } else {
       return ret;
